@@ -70,7 +70,7 @@ if (isset($_POST['gs-s-ajouter'])) {
     $emptyField = false;
     foreach ($gsFields as $field) {
         $$field = $_POST[$field];
-        if ($field == 'gsPhoto' && empty($_FILES['gsPhoto']['name'])) {
+        if ($field == 'gsPhoto' && (empty($_FILES['gsPhoto']) || empty($_FILES['gsPhoto']['name']))) {
             $emptyField = true;
         }
         if ($field !== 'gsPhoto' && empty($$field)) {
@@ -107,7 +107,6 @@ if (isset($_POST['gs-s-ajouter'])) {
         $createSalle = mysqli_query($link, $query);
         if ($createSalle) {
             $_SESSION['gsMessage'] = '<span style="color:green;">Salle créée avec succès</span>';
-            header('Location: '.$_SERVER['PHP_SELF'].'?result=success');
             $_SESSION['gsTitre'] = '';
             $_SESSION['gsDesc'] = '';
             $_SESSION['gsAdd'] = '';
@@ -116,14 +115,13 @@ if (isset($_POST['gs-s-ajouter'])) {
             $_SESSION['gsPhoto'] = '';
             $_SESSION['gsCap'] = '';
             $_SESSION['gsCat'] = '0';
+            header('Location: '.$_SERVER['PHP_SELF'].'?result=success');
             exit();
         } else {
             $_SESSION['gsMessage'] = '<span style="color:red;">Une erreur s\'est produite. Veuillez réessayer</span>';
             header('Location: '.$_SERVER['PHP_SELF'].'?result=fail');
             exit();
         }
-        header('Location: '.$_SERVER['PHP_SELF'].'?result=success');
-        exit();
     }
 }
 
